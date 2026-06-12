@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SYSTEM ALERT</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #000;
+            height: 100vh;
+            display: none;
+            overflow: hidden;
+            font-family: 'Courier New', monospace;
+        }
+
+        .hack-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #0a0a0a;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 999999;
+        }
+
+        .warning-icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+            animation: pulse 0.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .warning-title {
+            color: #ff0000;
+            font-size: 50px;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            text-shadow: 0 0 20px #ff0000;
+            animation: blink 0.3s infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .warning-text {
+            color: #ff4444;
+            font-size: 18px;
+            margin-bottom: 30px;
+            text-align: center;
+            max-width: 600px;
+            line-height: 1.8;
+        }
+
+        .scrolling-text {
+            color: #00ff00;
+            font-size: 14px;
+            height: 200px;
+            overflow: hidden;
+            width: 80%;
+            max-width: 800px;
+            border: 1px solid #00ff00;
+            padding: 10px;
+            background: rgba(0, 20, 0, 0.5);
+        }
+
+        .code-line {
+            margin: 2px 0;
+            opacity: 0;
+            animation: type 0.1s forwards;
+        }
+
+        @keyframes type {
+            to { opacity: 1; }
+        }
+
+        .btn-sound {
+            margin-top: 30px;
+            padding: 15px 30px;
+            background: #ff0000;
+            color: white;
+            border: none;
+            font-size: 18px;
+            cursor: pointer;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        .btn-sound:hover {
+            background: #ff4444;
+        }
+
+        .timer {
+            color: #ffff00;
+            font-size: 24px;
+            margin-top: 20px;
+        }
+
+        .progress-bar {
+            width: 300px;
+            height: 30px;
+            background: #1a0000;
+            border: 2px solid #ff0000;
+            margin-top: 20px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #ff0000;
+            width: 0%;
+            transition: width 0.1s;
+        }
+
+        .loading-text {
+            color: #00ff00;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="hack-screen" id="hackScreen">
+        <div class="warning-icon">⚠️</div>
+        <div class="warning-title">⚠️ SYSTEM COMPROMISED ⚠️</div>
+        <div class="warning-text">
+            🚨 CRITICAL ALERT! 🚨<br>
+            Your computer has been HACKED!<br>
+            Multiple security breaches detected!<br>
+            All files have been ENCRYPTED!
+        </div>
+
+        <div class="scrolling-text" id="scrollingText"></div>
+
+        <div class="timer" id="timer">TIME REMAINING: 05:00</div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+
+        <div class="loading-text" id="loadingText">Scanning system for vulnerabilities...</div>
+
+        <button class="btn-sound" onclick="playPrankSound()">🔊 PLAY ALARM</button>
+    </div>
+
+    <script>
+        // Full screen handler
+        function openFullScreen() {
+            const elem = document.documentElement;
+            if (elem.requestFullscreen) {
+                elem.requestFullscreen();
+            } else if (elem.mozRequestFullScreen) {
+                elem.mozRequestFullScreen();
+            } else if (elem.webkitRequestFullscreen) {
+                elem.webkitRequestFullscreen();
+            } else if (elem.msRequestFullscreen) {
+                elem.msRequestFullscreen();
+            }
+        }
+
+        // Start the prank
+        function startPrank() {
+            document.body.style.display = 'block';
+            document.body.style.background = '#000';
+            
+            openFullScreen();
+            
+            // Play alarm sound
+            playAlarm();
+            
+            // Start scrolling text
+            startCodeScroll();
+            
+            // Start timer
+            startTimer();
+            
+            // Start progress
+            startProgress();
+        }
+
+        // Alarm sound generator
+        function playAlarm() {
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            let isPlaying = true;
+            
+            function playBeep() {
+                if (!isPlaying) return;
+                
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                
+                oscillator.frequency.value = 800;
+                oscillator.type = 'square';
+                gainNode.gain.value = 0.3;
+                
+                oscillator.start();
+                oscillator.stop(audioContext.currentTime + 0.2);
+                
+                setTimeout(() => {
+                    if (isPlaying) playBeep();
+                }, 300);
+            }
+            
+            playBeep();
+            
+            window.stopAlarm = () => { isPlaying = false; };
+        }
+
+        // Hacking code scrolling
+        function startCodeScroll() {
+            const codes = [
+                '[2024-01-15 14:30:22] Scanning ports...',
+                '[2024-01-15 14:30:22] Port 22 OPEN',
+                '[2024-01-15 14:30:23] Port 80 OPEN',
+                '[2024-01-15 14:30:23] Port 443 OPEN',
+                '[2024-01-15 14:30:24] Brute force attack initiated...',
+                '[2024-01-15 14:30:25] Root access GRANTED',
+                '[2024-01-15 14:30:25] Bypassing firewall...',
+                '[2024-01-15 14:30:26] Firewall BYPASSED',
+                '[2024-01-15 14:30:27] Uploading payload...',
+                '[2024-01-15 14:30:28] Injecting malicious code...',
+                '[2024-01-15 14:30:29] Encrypting files...',
+                '[2024-01-15 14:30:30] 15% encrypted',
+                '[2024-01-15 14:30:31] 28% encrypted',
+                '[2024-01-15 14:30:32] 42% encrypted',
+                '[2024-01-15 14:30:33] 56% encrypted',
+                '[2024-01-15 14:30:34] 71% encrypted',
+                '[2024-01-15 14:30:35] 84% encrypted',
+                '[2024-01-15 14:30:36] 97% encrypted',
+                '[2024-01-15 14:30:37] 100% encrypted',
+                '[2024-01-15 14:30:38] ALL DATA COMPROMISED',
+                '[2024-01-15 14:30:39] Uploading to remote server...',
+                '[2024-01-15 14:30:40] IP ADDRESS: 192.168.1.105',
+                '[2024-01-15 14:30:41] Downloading contacts...',
+                '[2024-01-15 14:30:42] Downloading photos...',
+                '[2024-01-15 14:30:43] Downloading passwords...',
+                '[2024-01-15 14:30:44] INSTALLING BACKDOOR...',
+                '[2024-01-15 14:30:45] COMPLETE MADHRCHOD'
+            ];
+
+            let i = 0;
+            const scrollDiv = document.getElementById('scrollingText');
+            
+            setInterval(() => {
+                if (i < codes.length) {
+                    const line = document.createElement('div');
+                    line.className = 'code-line';
+                    line.textContent = codes[i];
+                    line.style.color = '#00ff00';
+                    scrollDiv.appendChild(line);
+                    scrollDiv.scrollTop = scrollDiv.scrollHeight;
+                    i++;
+                }
+            }, 150);
+        }
+
+        // Timer countdown
+        function startTimer() {
+            let seconds = 300;
+            const timer = document.getElementById('timer');
+            
+            setInterval(() => {
+                seconds--;
+                const mins = Math.floor(seconds / 60);
+                const secs = seconds % 60;
+                timer.textContent = `TIME REMAINING: 0${mins}:${secs < 10 ? '0' + secs : secs}`;
+                
+                if (seconds <= 0) {
+                    timer.textContent = 'TIME EXPIRED!';
+                }
+            }, 1000);
+        }
+
+        // Progress bar
+        function startProgress() {
+            let percent = 0;
+            const fill = document.getElementById('progressFill');
+            const text = document.getElementById('loadingText');
+            
+            const messages = [
+                'Scanning system for vulnerabilities...',
+                'Bypassing security protocols...',
+                'Decrypting secure files...',
+                'Injecting payload...',
+                'Uploading data to server...',
+                'Formatting hard drive...',
+                'Completing hack...'
+            ];
+
+            setInterval(() => {
+                if (percent < 100) {
+                    percent += Math.random() * 3;
+                    if (percent > 100) percent = 100;
+                    fill.style.width = percent + '%';
+                    
+                    const msgIndex = Math.floor((percent / 100) * messages.length);
+                    text.textContent = messages[msgIndex];
+                }
+            }, 200);
+        }
+
+        // Play prank sound button
+        function playPrankSound() {
+            close();
+        }
+
+        // Prevent exiting
+        function preventExit() {
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    e.preventDefault();
+                    alert('🚨 SYSTEM COMPROMISED! Cannot exit until scan complete!');
+                }
+            });
+        }
+
+        // Initialize
+        window.onload = function() {
+            startPrank();
+            preventExit();
+        };
+    </script>
+</body>
+</html>>
